@@ -1,8 +1,6 @@
 name: Build SwingInspector
 
 on:
-  push:
-    branches: [ main ]
   workflow_dispatch:
 
 jobs:
@@ -10,18 +8,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Confirm job started
+        run: echo "✅ GitHub Actions workflow is running"
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+
       - name: Set up Java
         uses: actions/setup-java@v3
         with:
-          distribution: 'temurin'
-          java-version: '11'
+          distribution: temurin
+          java-version: 11
 
-      - name: Build with Maven
-        run: mvn -U package assembly:single
+      - name: Run Maven build
+        run: |
+          echo "⚙️ Starting Maven build"
+          mvn clean package -X
 
-      - name: Upload artifact
+      - name: List target directory
+        run: |
+          echo "📁 Contents of target/"
+          ls -l target || echo "⚠️ target folder not found"
+
+      - name: Upload .jar file
         uses: actions/upload-artifact@v4
         with:
-          name: swing-inspector-jar
-          path: target/*jar-with-dependencies.jar
+          name: swinginspector-jar
+          path: target/*.jar
