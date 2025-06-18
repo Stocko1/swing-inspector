@@ -21,11 +21,13 @@ jobs:
           java-version: 11
 
       - name: Run Maven build
+        working-directory: ./swing-inspector
         run: |
           echo "⚙️ Starting Maven build"
           mvn clean package -X
 
       - name: List target directory
+        working-directory: ./swing-inspector
         run: |
           echo "📁 Contents of target/"
           ls -l target || echo "⚠️ target folder not found"
@@ -34,4 +36,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: swinginspector-jar
-          path: target/*.jar
+          path: swing-inspector/target/*.jar
